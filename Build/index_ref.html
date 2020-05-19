@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | U2019312WASMTest</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="TemplateData/UnityProgress.js"></script>
+    <script src="Build/UnityLoader.js"></script>
+    <script>
+      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Build.json", {onProgress: UnityProgress});
+	  
+	  var uInfo;
+	  
+	  var infoSetOnJSSide;
+	  
+	  window.onload = function()
+	  {
+		infoSetOnJSSide = "Hello, setted at windows.onload()";
+		console.log("window.onload() finished, value of 'infoSetOnJSSide': " + infoSetOnJSSide);
+	  }
+	  
+	  let setGreen = function ()
+	  {
+	  console.log('Console.log(): Sending set Green info to Unity');
+		unityInstance.SendMessage('Scripts', 'uSetGreenMat');
+	  };
+	  
+	  let setRed = function ()
+	  {
+	  console.log('Console.log(): Sending set Red info to Unity');
+		unityInstance.SendMessage('Scripts', 'uSetRedMat');
+	  }	  ;
+	  
+	  let jsGetInfoFromUnity = function()
+	  {
+		var ret = unityInstance.SendMessage('Scripts', 'uInfoCalledFromJS');
+		console.log('Console.log(): uInfoCalledFromJS: ' + uInfo);
+		console.log('Console.log(): uInfo: ' + uInfo);
+		document.getElementById("get_info_from_unity").innerHTML = uInfo;
+	  };
+	  
+	  let jsSendInfoToUnity = function()
+	  {
+		var str = 'sendInfoToUnity: ' + 'Hi from browser';
+		console.log('Console.log(): jsSendInfoToUnity: ' +str);
+		unityInstance.SendMessage('Scripts', 'uInfoSentFromJS', str);
+	  };
+	  
+	  let jsUSendInfo = function(str)
+	  {
+		console.log('Console.log(): jsUSendInfo: ' + str);
+		document.getElementById("holder_for_unity_data").innerHTML = str;
+		return str;
+	  };
+	  
+	  let jsUReturnInfo =  function(str)
+	  {
+		uInfo = str;
+	  }
+	  
+	  let jsSendImgToUnity = function()
+	  {
+		console.log('Console.log(): jsSendImgToUnity: ' + str);
+	  }
+
+    </script>
+  </head>
+  <body>
+    <div class="webgl-content">
+      <div id="unityContainer" style="width: 1200px; height: 700px"></div>
+      <div class="footer">
+        <div class="webgl-logo"></div>
+        <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
+        <div class="title">U2019312WASMTest</div>
+      </div>
+    </div>
+	<!--<div>
+		<img src="https://www.hubstairs.com/fr-FR/assets/autoplay_3.7071277f6ccfe8b5.jpg"/>
+	</div>-->
+	<div id="btn_green" style="background-color: green;color: white;display: block;height: 40px;line-height: 40px;text-decoration: none;width: 100px;text-align: center;" onclick="setGreen()">Set Green</div>
+	<div id="btn_red" style="background-color: red;color: white;display: block;height: 40px;line-height: 40px;text-decoration: none;width: 100px;text-align: center;" onclick="setRed()">Set Red</div>	
+	<div id="get_info_from_unity" style="background-color: gray;color: white;display: block;height: 40px;line-height: 40px;text-decoration: none;width: 300px;text-align: center;" onclick="jsGetInfoFromUnity()">Get Info From Unity</div>
+	<div id="set_info_to_unity" style="background-color: darkgray;color: white;display: block;height: 40px;line-height: 40px;text-decoration: none;width: 300px;text-align: center;" onclick="jsSendInfoToUnity()">Send to Unity: 'Hi from browser'</div>
+	<div id="holder_for_unity_data" style="background-color: pink;color: white;display: block;height: 40px;line-height: 40px;text-decoration: none;width: 300px;text-align: center;">Holding future data...</div>
+	<div id="img_for_unity" style="background-color: lightblue;color: white;display: block;height: 40px;line-height: 40px;text-decoration: none;width: 300px;text-align: center;" onclick="jsSendImgToUnity()">Send Image to Unity</div>
+	<img src="https://res.cloudinary.com/demo/image/upload/h_210/f_auto,q_auto/paint.jpg" width="150">
+  </body>
+</html>
